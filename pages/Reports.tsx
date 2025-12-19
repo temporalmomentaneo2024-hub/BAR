@@ -96,7 +96,7 @@ const Reports: React.FC<Props> = () => {
     link.click();
     document.body.removeChild(link);
     
-    if(window.confirm("La descarga ha comenzado. Â¿Deseas limpiar los datos histÃ³ricos?")) {
+    if(window.confirm("La descarga ha comenzado. ¿Deseas limpiar los datos históricos?")) {
         clearHistoricalData();
         setSessions([]);
         setFilteredSessions([]);
@@ -125,7 +125,7 @@ const Reports: React.FC<Props> = () => {
 
   const handleDelete = async () => {
     if (!selectedSession || !currentUser || currentUser.role !== 'ADMIN') return;
-    if (!window.confirm('Â¿Seguro que deseas eliminar este turno? Esta acciÃ³n no se puede deshacer.')) return;
+    if (!window.confirm('¿Seguro que deseas eliminar este turno? Esta acción no se puede deshacer.')) return;
     setIsDeleting(true);
     try {
       await deleteShift(selectedSession.id);
@@ -148,7 +148,7 @@ const Reports: React.FC<Props> = () => {
         <div>
             <h2 className="text-3xl font-bold text-white">Historial de Turnos</h2>
             <p className="text-slate-400">
-                {currentUser.role === 'ADMIN' ? 'GestiÃ³n global y auditorÃ­a' : 'Mis turnos cerrados'}
+                {currentUser.role === 'ADMIN' ? 'Gestión global y auditoría' : 'Mis turnos cerrados'}
             </p>
         </div>
         
@@ -303,7 +303,7 @@ const Reports: React.FC<Props> = () => {
                         </h4>
                         <div className="space-y-2 text-sm">
                             <div className="flex justify-between text-slate-300">
-                                <span>Dinero TeÃ³rico (Sistema):</span>
+                                <span>Dinero Teórico (Sistema):</span>
                                 <span className="font-mono">${selectedSession.salesReport.cashToDeliver.toLocaleString()}</span>
                             </div>
                             <div className="flex justify-between text-white font-bold text-base">
@@ -369,7 +369,7 @@ const Reports: React.FC<Props> = () => {
                     {/* Audit Log (If exists) */}
                     {selectedSession.auditLog && selectedSession.auditLog.length > 0 && (
                         <div>
-                             <h4 className="text-amber-500 text-sm font-bold mb-2 flex items-center gap-2"><AlertTriangle size={14}/> AuditorÃ­a</h4>
+                             <h4 className="text-amber-500 text-sm font-bold mb-2 flex items-center gap-2"><AlertTriangle size={14}/> Auditoría</h4>
                              <div className="space-y-2">
                                  {selectedSession.auditLog.map((log, idx) => (
                                      <div key={idx} className="text-xs bg-amber-900/10 border border-amber-900/30 p-2 rounded text-amber-200">
@@ -399,7 +399,7 @@ const Reports: React.FC<Props> = () => {
                                     autoFocus
                                     value={reopenReason}
                                     onChange={e => setReopenReason(e.target.value)}
-                                    placeholder="Ej: OlvidÃ© registrar un pago de $50.000..."
+                                    placeholder="Ej: Olvidé registrar un pago de $50.000..."
                                     className="w-full bg-bar-950 border border-rose-700 rounded-lg p-3 text-white focus:outline-none focus:ring-1 focus:ring-rose-500"
                                 />
                                 <div className="flex gap-3">

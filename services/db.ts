@@ -20,7 +20,7 @@ import { STORAGE_KEYS, DEFAULT_AI_PROMPT } from '../constants';
 const resolveApiBase = () => {
   if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
   if (import.meta.env.DEV) return 'http://localhost:3000/api';
-  return '/.netlify/functions/api';
+  return '/api';
 };
 
 const API_BASE = resolveApiBase();
@@ -72,7 +72,7 @@ export const loginUser = async (username: string, password: string) => {
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    throw new Error(err.error || 'Error de autenticaciÃ³n');
+    throw new Error(err.error || 'Error de autenticación');
   }
   return res.json();
 };

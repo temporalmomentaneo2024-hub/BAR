@@ -25,7 +25,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       localStorage.setItem(STORAGE_KEYS.AUTH_USER, JSON.stringify(res.user));
       onLogin(res.user);
     } catch (err: any) {
-      setError(err.message || 'Error de autenticacion');
+      setError(err.message || 'Error de autenticación');
       localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
       localStorage.removeItem(STORAGE_KEYS.AUTH_USER);
     } finally {
@@ -68,7 +68,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-300">Contrasena</label>
+            <label className="text-sm font-medium text-slate-300">Contraseña</label>
             <div className="relative">
               <Lock className="absolute left-3 top-3 text-slate-500" size={18} />
               <input
@@ -87,7 +87,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             disabled={loading}
             className="w-full bg-bar-500 hover:bg-bar-400 text-bar-950 font-bold py-3 rounded-lg transition-transform active:scale-95 disabled:opacity-60"
           >
-            {loading ? 'Ingresando...' : 'Iniciar Sesion'}
+            {loading ? 'Ingresando...' : 'Iniciar Sesión'}
           </button>
         </form>
       </div>
