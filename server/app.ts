@@ -4,7 +4,7 @@ import cors from 'cors';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
-import { query } from './db.ts';
+import { query, hasDbConnection } from './db.ts';
 
 const app = express();
 app.use(cors());
@@ -73,6 +73,9 @@ const loadShiftData = async (shiftId: string) => {
 };
 
 app.get('/api/health', async (_req, res) => {
+  if (!hasDbConnection()) {
+    return res.status(503).json({ ok: false, db: 'not_configured', message: 'DATABASE_URL no está configurada' });
+  }
   try {
     await query('SELECT 1');
     return res.json({ ok: true, db: 'connected' });
@@ -80,6 +83,20 @@ app.get('/api/health', async (_req, res) => {
     console.error('Health check error:', err);
     return res.status(500).json({ ok: false, db: 'error', message: err?.message || 'DB connection failed' });
   }
+});
+
+// Guard para rutas que requieren BD configurada
+const requireDb = (_req: any, res: any, next: any) => {
+  if (!hasDbConnection()) {
+    return res.status(503).json({ error: 'DATABASE_URL no está configurada o la conexión a la BD no está disponible.' });
+  }
+  return next();
+};
+
+// Aplica guard a todas las rutas de API salvo health (ya maneja su propia respuesta)
+app.use('/api', (req, res, next) => {
+  if (req.path === '/health') return next();
+  return requireDb(req, res, next);
 });
 
 const mapAiConfig = (row: any) => ({
@@ -1062,6 +1079,20 @@ app.post('/api/admin/clear', authMiddleware, requireAdmin, async (_req, res) => 
 });
 
 app.use('/api', (_req, res) => res.status(404).json({ error: 'Not Found' }));
+
+// Manejador de errores global en JSON
+app.use((err: any, _req: any, res: any, _next: any) => {
+  console.error('API error:', err);
+  if (res.headersSent) return;
+  const message = err?.message || 'Error interno';
+  const isDbError =
+    message.includes('DATABASE_URL') ||
+    err?.code === 'ECONNREFUSED' ||
+    err?.code === 'ENOTFOUND' ||
+    err?.code === 'ECONNRESET';
+  const status = isDbError ? 503 : 500;
+  res.status(status).json({ error: message });
+});
 
 export default app;
 
