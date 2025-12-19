@@ -15,7 +15,7 @@ export const handler = async (event: any, context: any) => {
     // Ensure required fields
     return {
       statusCode: res.statusCode || 200,
-      headers: res.headers,
+      headers: { 'content-type': 'application/json', ...(res.headers || {}) },
       body: typeof res.body === 'string' ? res.body : JSON.stringify(res.body ?? { ok: true })
     };
   } catch (err) {

@@ -72,7 +72,15 @@ const loadShiftData = async (shiftId: string) => {
   };
 };
 
-app.get('/api/health', (_req, res) => res.json({ ok: true }));
+app.get('/api/health', async (_req, res) => {
+  try {
+    await query('SELECT 1');
+    return res.json({ ok: true, db: 'connected' });
+  } catch (err: any) {
+    console.error('Health check error:', err);
+    return res.status(500).json({ ok: false, db: 'error', message: err?.message || 'DB connection failed' });
+  }
+});
 
 const mapAiConfig = (row: any) => ({
   provider: row?.ai_provider || null,
