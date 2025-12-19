@@ -32,11 +32,13 @@ const AdminRoute: React.FC<AdminRouteProps> = ({ user, children }) => {
 const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [backendError, setBackendError] = useState<string | null>(null);
 
   useEffect(() => {
     const bootstrap = async () => {
       try {
         await initializeDB();
+        setBackendError(null);
         const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
         if (token) {
           try {
@@ -76,7 +78,8 @@ const App: React.FC = () => {
           }
         }
       } catch (error) {
-        console.error("Error parsing stored user session:", error);
+        console.error("Error parsing stored user session or backend offline:", error);
+        setBackendError('Backend offline o no disponible.');
         localStorage.removeItem(STORAGE_KEYS.AUTH_USER);
       } finally {
         setLoading(false);
@@ -99,7 +102,7 @@ const App: React.FC = () => {
   if (loading) return null;
 
   if (!user) {
-    return <Login onLogin={handleLogin} />;
+    return <Login onLogin={handleLogin} backendError={backendError} />;
   }
 
   return (

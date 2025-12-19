@@ -6,9 +6,10 @@ import { STORAGE_KEYS } from '../constants';
 
 interface LoginProps {
   onLogin: (user: User) => void;
+  backendError?: string | null;
 }
 
-const Login: React.FC<LoginProps> = ({ onLogin }) => {
+const Login: React.FC<LoginProps> = ({ onLogin, backendError }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -45,10 +46,10 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {error && (
+          {(backendError || error) && (
             <div className="bg-rose-500/10 border border-rose-500/50 text-rose-200 p-3 rounded-lg flex items-center gap-2 text-sm">
               <AlertCircle size={16} />
-              {error}
+              {backendError ? backendError : error}
             </div>
           )}
 
