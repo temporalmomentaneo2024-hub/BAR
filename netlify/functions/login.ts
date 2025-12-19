@@ -10,7 +10,11 @@ export const handler = async (event: any, context: any) => {
       path: '/api/login',
       httpMethod: 'POST',
       rawUrl: event.rawUrl?.replace(event.path || '', '/api/login'),
-      body: event.body || ''
+      body: event.body || '',
+      headers: {
+        ...(event.headers || {}),
+        'content-type': event.headers?.['content-type'] || 'application/json'
+      }
     };
 
     const res = await handlerBase(fixedEvent, context);
