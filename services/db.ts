@@ -19,7 +19,8 @@ import { STORAGE_KEYS, DEFAULT_AI_PROMPT } from '../constants';
 // Resolve API base to avoid hitting the Vite dev server instead of API
 const resolveApiBase = () => {
   if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
-  return 'http://localhost:3000/api';
+  if (import.meta.env.DEV) return 'http://localhost:3000/api';
+  return '/.netlify/functions/api';
 };
 
 const API_BASE = resolveApiBase();

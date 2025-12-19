@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Beer, Lock, User as UserIcon, AlertCircle, RefreshCw } from 'lucide-react';
+import { Beer, Lock, User as UserIcon, AlertCircle } from 'lucide-react';
 import { loginUser } from '../services/db';
 import { User } from '../types';
 import { STORAGE_KEYS } from '../constants';
@@ -25,22 +25,11 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       localStorage.setItem(STORAGE_KEYS.AUTH_USER, JSON.stringify(res.user));
       onLogin(res.user);
     } catch (err: any) {
-      setError(err.message || 'Error de autenticación');
+      setError(err.message || 'Error de autenticacion');
       localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
       localStorage.removeItem(STORAGE_KEYS.AUTH_USER);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleFactoryReset = () => {
-    if (
-      window.confirm(
-        '⚠️ ATENCIÓN: Esto borrará TODOS los datos (ventas, productos, usuarios) y reiniciará la aplicación como nueva.\n\n¿Estás seguro de que quieres continuar?'
-      )
-    ) {
-      localStorage.clear();
-      window.location.reload();
     }
   };
 
@@ -72,14 +61,14 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className="w-full bg-bar-900 border border-bar-700 rounded-lg py-2.5 pl-10 pr-4 text-white focus:outline-none focus:border-bar-500 focus:ring-1 focus:ring-bar-500 transition-colors"
-                placeholder="Ej. admin"
+                placeholder="Usuario"
                 autoComplete="username"
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-300">Contraseña</label>
+            <label className="text-sm font-medium text-slate-300">Contrasena</label>
             <div className="relative">
               <Lock className="absolute left-3 top-3 text-slate-500" size={18} />
               <input
@@ -87,7 +76,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full bg-bar-900 border border-bar-700 rounded-lg py-2.5 pl-10 pr-4 text-white focus:outline-none focus:border-bar-500 focus:ring-1 focus:ring-bar-500 transition-colors"
-                placeholder="••••••••"
+                placeholder="********"
                 autoComplete="current-password"
               />
             </div>
@@ -98,22 +87,9 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             disabled={loading}
             className="w-full bg-bar-500 hover:bg-bar-400 text-bar-950 font-bold py-3 rounded-lg transition-transform active:scale-95 disabled:opacity-60"
           >
-            {loading ? 'Ingresando...' : 'Iniciar Sesión'}
+            {loading ? 'Ingresando...' : 'Iniciar Sesion'}
           </button>
         </form>
-
-        <div className="mt-6 text-center space-y-4">
-          <p className="text-xs text-slate-600">Credenciales por defecto: admin / 123</p>
-
-          <button
-            onClick={handleFactoryReset}
-            className="text-xs text-rose-800/60 hover:text-rose-500 flex items-center justify-center gap-1 mx-auto transition-colors"
-            title="Usar si la aplicación presenta errores graves"
-          >
-            <RefreshCw size={12} />
-            Restablecer datos de fábrica
-          </button>
-        </div>
       </div>
     </div>
   );

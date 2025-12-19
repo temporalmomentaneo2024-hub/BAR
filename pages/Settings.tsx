@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { AlertTriangle, CheckCircle, Info, KeyRound, Loader2, Save, Shield, Wand2 } from 'lucide-react';
 import { AiAgentConfig, AiProvider } from '../types';
 import { DEFAULT_AI_PROMPT } from '../constants';
-import { getAiConfig, isAiEnabled, saveAiConfig, testAiConnection, getConfig, updateConfig } from '../services/db';
+import { getAiConfig, isAiEnabled, saveAiConfig, testAiConnection, getConfig, updateConfig, clearHistoricalData } from '../services/db';
 
 const providerOptions: { value: AiProvider; label: string; hint: string }[] = [
   { value: 'GEMINI', label: 'Gemini', hint: 'Velocidad y buen contexto' },
@@ -14,6 +14,7 @@ const Settings: React.FC = () => {
   const [saving, setSaving] = useState(false);
   const [testing, setTesting] = useState(false);
   const [savingName, setSavingName] = useState(false);
+  const [resetting, setResetting] = useState(false);
 
   const [provider, setProvider] = useState<AiProvider>('GEMINI');
   const [apiKey, setApiKey] = useState('');
@@ -60,6 +61,20 @@ const Settings: React.FC = () => {
       setStatus({ type: 'error', message: err?.message || 'No se pudo guardar la configuracion' });
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleFactoryReset = async () => {
+    if (!window.confirm('Esto borrara datos historicos almacenados. ¿Quieres continuar?')) return;
+    setResetting(true);
+    try {
+      await clearHistoricalData();
+      localStorage.clear();
+      setStatus({ type: 'ok', message: 'Datos restablecidos. Recarga para continuar.' });
+    } catch (err: any) {
+      setStatus({ type: 'error', message: err?.message || 'No se pudo restablecer los datos' });
+    } finally {
+      setResetting(false);
     }
   };
 
@@ -148,6 +163,17 @@ const Settings: React.FC = () => {
           >
             {savingName ? 'Guardando...' : 'Guardar'}
           </button>
+        </div>
+        <div className="pt-3 border-t border-bar-700">
+          <p className="text-xs uppercase text-slate-500 font-bold tracking-wide mb-2">Zona de mantenimiento</p>
+          <button
+            onClick={handleFactoryReset}
+            disabled={resetting}
+            className="px-4 py-3 bg-rose-900/50 hover:bg-rose-800 text-rose-100 rounded-lg font-semibold transition-colors disabled:opacity-60"
+          >
+            {resetting ? 'Restableciendo...' : 'Restablecer datos de fabrica'}
+          </button>
+          <p className="text-xs text-slate-500 mt-1">Solo para administradores. Borra datos historicos y limpia la sesion local.</p>
         </div>
       </div>
 
