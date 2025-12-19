@@ -1,0 +1,5 @@
+{
+  "name": "BarFlow - Sistema de Contabilidad",
+  "description": "Aplicación de gestión de inventario y contabilidad para bares. Permite control de turnos, gestión de precios y usuarios, y exportación de datos.",
+  "requestFramePermissions": []
+}
